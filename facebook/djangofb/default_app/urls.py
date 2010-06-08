@@ -1,2 +1,7 @@
-ÿIíí:¯e<ù¹ 11Mz#]'³§9•[áìšóìà“ÃH¶AyÀ&‚ë__æŒƒ+µçæV–àˆ“@û—«G“Y—åÆ[të»ŞeÁ«4>™ì§Ê÷º5=Aó·ccv"®0İÇÌ."°åZGÑæÄN…Q¬	ÿ‰YJ¯„ÄÇdWL¸´~g
-Å‚¼c¦’ıã0½ëÌÚ>GA®HE­OÉl¡ÏkF
+from django.conf.urls.defaults import *
+
+urlpatterns = patterns('{{ project }}.{{ app }}.views',
+    (r'^$', 'canvas'),
+    # Define other pages you want to create here
+)
+

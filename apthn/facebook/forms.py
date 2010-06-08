@@ -1,3 +1,11 @@
-úøÖí
-5ãKñ~ÌÓ"j—Ë1f©Ù†]r-‘PI£u*¯øi„û7ºâî¦e”è&ĞÚá*CKG¢ZO°İÖUVW¡ôşmã~ÒhË=…r6½ÒsUn%C–{N€r8Ôß	i÷¬+à¤î!CÇ0Éáì ¥Tä6ïïfi
-­µçÔ>õeÒ7j¹î46€ºs)š/3àu’¼»§[‹4SyñKhkÃƒ&^x†äwÀS’u†9¿—¹^‚,İ$Q{+V]gÍa¢ËU˜à¾¬|í·±F–Õ@»„ŞràP$Îº*CÚìF£¯Š¼¾†‡ò®„hü¯Î¹1 6Ü}|\?Ñ=›°oÃÓ`Ş¹“Fÿüû*OVw!	Ùùtû^CÖ6'Û•TÿÜîÑ¯+yİø	ËÖy(šQ¬Y'×6ºÍ©BÂ¡.d;g%|Ö#ß¶bvK&B²SÓ¿’±­‚ş²Í
+from django import forms
+
+
+class FacebookContactForm(forms.Form):
+    email = forms.EmailField(help_text="Enter your email if you want to receive an email notification.", required=False)
+
+    def contactstring(self, request):
+        if self.cleaned_data['email']:
+            return self.cleaned_data['email']
+        else:
+            return 'fb-%s' % request.facebook.uid

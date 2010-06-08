@@ -1,1 +1,30 @@
-”ëG4»Tõ9g1ÙÈC™¢–ÅíëÈù An¯Ä¥íiÄ“IkäYu²Ýµºö‡ÎåÁgd!à-Q#i—×ËÑPV—˜ýü˜°<‡^µc“HkHˆ×c¬7ÔCñß?†ì…1Õ?58;w(13M†©Üùö†0yP†lÒv&ÛéÂVîôÓbˆ×~ìsdjÚÔn¸˜å,^å&ô7)MÚ¯}û†Ï£ñ?:f”Îó0à—ÇPœvmgÃç‚•IH…ÙÎJ¥3¨ieïwSà“ämj$Ç­“åw>½Ôs9X‡û2ý:•¦w·ª‘–%q¸xÊ,£œW!ÇåŸxç1äœQ|jGÑJdh§ÞÚ!¶]ÕQCçžý¼þJNù8;¯6z# HýWÖ¶æ6¨¬µP8˜D¾1A‡ÐÏ¼}ºŸ”½Ùœi.ÛÚ57ÐQMZ#Ø,©¾Á=ð-UUëò&¬f†g©+•x‹Xf”ð+T_Ø2ÎgÈ¨µ&+òñÛRD¬ˆ÷$}q%Fb8Ïüå 4aRvâ[è™_;Ì*rª,Úõõr¡a èýJØðN°zì-©\ô¦kæ½g¯›5bÝ<šÐ©Pç‚Ë?$i¼]«–¿fgãÑ1ûØ¹Ltx1vAàx”×É8ÎMëd"ðÌ¯…y4|™º!
+#logo-img {
+    display: block;
+    font-family: Futura;
+    font-size: 28pt;
+    background-image: url(../img/logo.png);
+    width: 320px;
+    height: 42px;
+    background-repeat: no-repeat;
+    text-indent: -100em;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background: transparent !important;
+}
+
+#container, #content, #bottom {
+    background: none !important;
+    margin: 0;
+    width: auto;
+}
+
+.subtitle {
+    display: block;
+    font-size: 1.2em;
+    font-style: italic;
+    margin: 0 0 3em 0;
+}

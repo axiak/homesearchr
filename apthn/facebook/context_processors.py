@@ -1,1 +1,4 @@
-QÜæ\\şQ—7¬ˆ›cÄŒ‚UÈ4ºh=à ¬gÃ±æê–X»Çµ¹¦* ³ÍóıÖUDŠâÄš´ï¹…€
+
+
+def facebook(request):
+    return {'fb': request.facebook}

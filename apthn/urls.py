@@ -1,4 +1,9 @@
-bò=utpÅ1úØŒ¸f»$Ô	\+†Æ;4S©’¼gPÂáše|YOa›ÜT`T´	ü®¤0ÉßÿÂ%Ö:`çŒÝyA‡w´÷»4ŒËÆ£ëƒ<›ÖpîÈpÚ&Ø/þåR
-ÙsãÞØm)·b9<ÊË´"¬o\·¥4$ïXs2^Ü|$£´i¡n6Ùˆ)t|ä
-È\
-Ró”d?PçËÅ6c´Þ[Ö‘|)fáêlF˜f7I.×LNÊ0S¸=C¡»¼ÚÎ~»®Ýä“2oÖ5X4æ«µryP¹cý›Þ`UwÆÇXã þDS¤™$	¢ˆ»8.Òž%Š g;ä¸yå¨B{ñÔïOA„¬6pÅrÀ± ¯ü÷1H'{êd-OÍ3¥Ç;gÔo¯Rß~þšªdÁæ¯\87¡'+Bf\RM15¯ØhxäH·
+from django.conf.urls.defaults import *
+#from django.views.generic.simple import direct_to_template
+
+urlpatterns = patterns('',
+       (r'^apts/', include('apthn.apts.urls')),
+       (r'^filters/', include('apthn.filters.urls')),
+       (r'^/?$', 'apthn.filters.views.main'),
+       (r'^fb/', include('apthn.facebook.urls')),
+)

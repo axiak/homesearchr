@@ -1,1 +1,7 @@
-jÔI´°+–ÿÎ´†aßi§‘éğ/ŒÜøVPÎ®6w~Z–Æm¿Æçdˆ¦»µİ»´á<Ä‚úiÚš¥63?©uzùØÖà>d ±0š›Š:<î)0nÍv³‡…íìÀîiŠ7‚« Áâ(&èÉ_Š$*ßñ3q©‘!à8iùXÓÜ)© ­>IÊßINŠ¾d‰
+import random
+import string
+
+__all__ = ('randstr',)
+
+def randstr(n=10):
+    return ''.join(random.choice(string.lowercase) for x in range(n))

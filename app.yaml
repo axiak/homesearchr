@@ -1,3 +1,32 @@
-áXÈRé_¸Ô#O€‰cqœâö\ª`ò9L½Ö½S=N½ÑwüÎ³Ñ¡ÉO¬$ëY„ùÍM‘,õr*Vl"y4t,n"–´Ö€THlÀQÌ×³VÙ6ÊïÁ¡q$páÛ(ƒ×Ëb‡™oê›
-1òÊ*$`¤W”Lİ#.‹éKX|}nm²“Æ¤S0rŞï.ÒºB¾%ä JägŞ7S:ì;µ¤b’]|‹yû’m]À
-Èe]ğ_‘ìÉ¾ª7(=O¤!î·Çš–İ+¥=³ë(.cÖ+H>É*{MCWJ$ì[¨%Šb@.Œç¼DG—õ­ÙßT…Îr¤°ÙDÉİmçëU¬øEq¦wD°›Îü#f)	øÿƒ¿,…e·óß-ËF†Ìç'Ììo&%AÇ´ª.&ô4.”Ä¹¯ßFp+¯ûÖ{_9Æå›¾%"Ğ¡…¶]µldÔ™Áöïø ÏôÏ^õ/C˜˜úŒÊŠ›E[±Sæˆ}ÆGwN}‰º*.ÊéLÌªH:ñS¶‚}•9ÿRN¡º:¤	Zò.^L›šó¿­Ÿ şÈó¸aÒES£äb°ƒS/±Õ{y@eC^ÄU®®áütC0QˆÚ.máïSÅô`>Ô€ÆR6Â¯4>ÿë_÷øpÊøb‰ú+Çİ|-–MJ|ºq6$¾Z}NKûp‚¡!µŞ?]‹a·ã#r
+application: apthuntnotifier
+version: 2
+runtime: python
+api_version: 1
+default_expiration: "1d"
+
+handlers:
+- url: /favicon.ico
+  static_files: static/favicon.ico
+  upload: static/favicon.ico
+
+- url: /sitemap.xml
+  static_files: static/sitemap.xml
+  upload: static/sitemap.xml
+
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /static
+  static_dir: static
+
+- url: /filters/email.*
+  script: main.py
+  login: admin
+
+- url: /apts/.*
+  script: main.py
+  login: admin
+
+- url: /.*
+  script: main.py

@@ -1,2 +1,14 @@
-àgý¹Ûk}?ºú¬Òßµ±y~vËu79`6·´…ÓÙñÆ~O3½K¸iQp²1»ÁMq£8l?HÓI¡rRz.eÇ´)qC¦ªó>\ÿ>:ƒ½anÂrc5‘å-”’ï˜(¿\¢[®úq
-s=¤»[ÉÛbüF­&î;Œg_Äø¿o‹3çYŒèì¶ê—+ãXËÉ"?XH/_MV^½&||»’PeÙm–”I’†F¡fOjÉ\JPž?ûxj#ëÞu]„5Ô¦¨n1cÑÌ°¤gO&›Ø<²0yãƒ‘9ÕR9î„P÷|¢û5oÎ"éØ_£ñÉ$Í{Hi®ƒÜ4[ÅZJÝI§Q8AìÓFG˜dÓQÜO#”Bðà)ŸÔŸ‚£	Ì3×í¤ŸT¯B`pÜŽAA†'³*®ÀG!!Á5ö £^(€--zes_Øm
+from google.appengine.ext import db
+
+__all__ = ('AptHunter',)
+
+class AptHunter(db.Model):
+    user = db.UserProperty()
+    email = db.EmailProperty()
+    contactinfo = db.StringProperty(required=True)
+    first_created = db.DateTimeProperty()
+
+    def __str__(self):
+        return '<User %s>' % contactinfo
+
+    __repr__ = __str__
