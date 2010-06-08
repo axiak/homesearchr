@@ -5,4 +5,5 @@ urlpatterns = patterns('',
         (r'^count/?$', 'apthn.apts.views.count_apts'),
         (r'^get/(\w+)/?$', 'apthn.apts.getapts.getapts'),
         (r'^clean/?$', 'apthn.apts.views.clean_apts'),
+        (r'^list/(\w+)/json/?$', 'apthn.apts.views.apt_list')
 )
