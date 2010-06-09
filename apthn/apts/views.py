@@ -3,7 +3,9 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.api import mail
 
 from django.http import HttpResponse
+from django.utils import simplejson
 
+from apthn.utils import caching
 from apthn.apts.models import Apartment, ApartmentCounts
 
 from collections import defaultdict
@@ -134,3 +136,22 @@ def count_breakdowns(request):
                       method="POST")
 
     return HttpResponse(output, mimetype="text/plain")
+
+@caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 3600)
+def apt_list(request, city):
+    query = Apartment.all()
+    bad_keys = ('price_thousands', 'region', 'updated_hour', 'updated_day',
+                'addr', 'location_accuracy', 'geohash')
+    results = []
+    for result in query.fetch(1000):
+        d = dict(result._entity)
+        for key in bad_keys:
+            del d[key]
+        d['updated'] = int(d['updated'].strftime("%s"))
+        if d.get('location'):
+            d['location'] = (d['location'].lat, d['location'].lon)
+        else:
+            continue
+        results.append(d)
+    return HttpResponse(simplejson.dumps({'results': results}),
+                        mimetype='application/json')

@@ -24,6 +24,9 @@ handlers:
   script: main.py
   login: admin
 
+- url: /apts/list.*
+  script: main.py
+
 - url: /apts/.*
   script: main.py
   login: admin
