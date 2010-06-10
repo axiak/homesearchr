@@ -47,6 +47,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "apthn.context_processors.auth",
+    "apthn.context_processors.addreq",
     "apthn.facebook.context_processors.facebook",
     )
 

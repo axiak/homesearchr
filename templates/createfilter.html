@@ -13,6 +13,11 @@
   google.load("jqueryui", "1.8.0");
   var zoom = {{ mapzoom }};
   var centerPoint = new GLatLng({{ centerlat }}, {{ centerlng }});
+  {% ifequal REQUEST.META.SERVER_NAME "localhost" %}
+  var listingURL = "/static/json/apts.json";
+  {% else %} 
+  var listingURL = "/apts/list/{{ CITY }}/json/";
+  {% endifequal %}
   //]]>
   </script>
 

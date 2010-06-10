@@ -27,7 +27,7 @@ def create_filter_key(request, city="boston", template="createfilter.html", *arg
     if request.method == 'POST':
         return None
     
-    return 'cf__%s%s' % (city, template)
+    return 'cf_%s%s' % (city, template)
 
 @cacheview(create_filter_key)
 def create_filter(request, city="boston", template="createfilter.html", initial={}, ContactForm=EmailForm):
@@ -103,7 +103,7 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
 
     context['AJAX_KEY'] = settings.GOOGLE_AJAX_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])
     context['MAP_KEY'] = settings.GOOGLE_MAP_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])
-
+    context["CITY"] = city
     return direct_to_template(request, template, context)
 
 def create_filter_success(request, city="boston"):

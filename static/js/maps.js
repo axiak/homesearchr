@@ -37,30 +37,29 @@ $(document).ready(function (e) {
 		icon.image = ["/static/img/pins/",colors[i],".png"].join("")
 		pinicons[colors[i]] = icon
 	    }
-
 	    //place colorful pins
-	    $.getJSON("/static/json/apts.json", place_colorful_pins)
+	    $.getJSON(listingURL, place_colorful_pins)
        }
     });
 
 function price_icon(price){
     if(price < 1000)
-	return pinicons.orange
+	return pinicons.orange;
     if(price < 1500)
-	return pinicons.green
+	return pinicons.green;
     if(price < 2000)
-	return pinicons.blue
-    return pinicons.purple
+	return pinicons.blue;
+    return pinicons.purple;
 }
 
 function place_colorful_pins(results, status) {
     // lol what does status even do?
-    var apts = results.results
+    var apts = results.results;
     for(var i=0; i<200; i++){
-	var apt = apts[i]
-	var ll = new GLatLng(apt.location[0],apt.location[1])
-	var marker = new GMarker(ll, {icon:price_icon(apt.price)})
-	map.addOverlay(marker)
+	var apt = apts[i];
+	var ll = new GLatLng(apt.location[0],apt.location[1]);
+	var marker = new GMarker(ll, {icon:price_icon(apt.price)});
+	map.addOverlay(marker);
     }
 
 }
