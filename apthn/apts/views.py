@@ -139,19 +139,32 @@ def count_breakdowns(request):
 
 @caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 3600)
 def apt_list(request, city):
+    limit = 1000
     query = Apartment.all()
+    query.filter("region =", city.upper())
+    query.order('-updated')
     bad_keys = ('price_thousands', 'region', 'updated_hour', 'updated_day',
                 'addr', 'location_accuracy', 'geohash')
+
     results = []
-    for result in query.fetch(1000):
-        d = dict(result._entity)
-        for key in bad_keys:
-            del d[key]
-        d['updated'] = int(d['updated'].strftime("%s"))
-        if d.get('location'):
-            d['location'] = (d['location'].lat, d['location'].lon)
-        else:
-            continue
-        results.append(d)
+    while True:
+        queryresults = query.fetch(1000)
+        if not queryresults:
+            break
+        for result in queryresults:
+            d = dict(result._entity)
+            for key in bad_keys:
+                del d[key]
+            d['updated'] = int(d['updated'].strftime("%s"))
+            if d.get('location'):
+                d['location'] = (d['location'].lat, d['location'].lon)
+            else:
+                continue
+            results.append(d)
+            if len(results) >= limit:
+                break
+        if len(results) >= limit:
+            break
+
     return HttpResponse(simplejson.dumps({'results': results}),
                         mimetype='application/json')

@@ -404,5 +404,11 @@ indexes:
 - kind: Apartment
   properties:
   - name: region
+  - name: updated
+    direction: desc
+
+- kind: Apartment
+  properties:
+  - name: region
   - name: updated_day
   - name: geohash
