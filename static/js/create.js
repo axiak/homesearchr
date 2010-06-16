@@ -7,6 +7,13 @@ function validate_form() {
     if (!$("#id_expires")[0].value)
         errors.push("Please enter a valid expiration date.");
 
+    return validate_apt_form(errors);
+}
+
+function validate_apt_form(errors) {
+    if (typeof(errors) != "object") {
+        errors = new Array();
+    }
     var size_selected = false;
     var options = $("#id_size")[0].options;
     for (var i=0; i < options.length; i++) {
@@ -25,7 +32,7 @@ function validate_form() {
 }
 
 function get_count() {
-    var errors = validate_form();
+    var errors = validate_apt_form();
     if (errors.length) {
         /* handle errors */
         return;
