@@ -138,7 +138,7 @@ def count_breakdowns(request):
 
     return HttpResponse(output, mimetype="text/plain")
 
-@caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 7 * 3600)
+@caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 22000)
 def apt_list(request, city):
     limit = 3000
     query = Apartment.all()
