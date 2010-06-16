@@ -27,10 +27,6 @@ cron:
   url: /apts/list/boston/json/
   schedule: every 6 hours
 
-- description: Update boston prefetch
-  url: /apts/list/boston/json/
-  schedule: every 6 hours
-
 - description: Update newyork prefetch
   url: /apts/list/newyork/json/
   schedule: every 6 hours
