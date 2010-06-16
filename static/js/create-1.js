@@ -120,8 +120,5 @@ $(document).ready(function (e) {
 
         $("#id_expires").datepicker({minDate: '+7D', maxDate: '+6M'});
 
-        $("#mainform").validate({
-                debug: true
-                    });
-
+        $("#mainform").validate();
     });
