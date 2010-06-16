@@ -1,4 +1,5 @@
 import time
+import logging
 
 from google.appengine.api import memcache
 
@@ -21,6 +22,7 @@ def cacheview(keyfunc, cachetimeout=86400):
         def _wrapper(*args, **kwargs):
             cache_key = keyfunc(*args, **kwargs)
             if cache_key is None:
+                logging.info("CACHE: No cache")
                 return method(*args, **kwargs)
 
             curtime = time.time()
@@ -29,16 +31,23 @@ def cacheview(keyfunc, cachetimeout=86400):
             if result:
                 ro_timeout, result = result
                 if ro_timeout < curtime:
+                    logging.info("CACHE: HIT!")
                     return result
+                else:
+                    logging.info("CACHE: Hit but RO timeout")
+            else:
+                logging.info("CACHE: Miss")
 
             ro_key = 'ro_' + cache_key
-            if not memcache.add(ro_key, True, CACHE_ADD_RO_TIME):
+            if result and not memcache.add(ro_key, True, CACHE_ADD_RO_TIME):
+                logging.info("CACHE: RO timeout and someone else processing.")
                 return result
 
             ro_timeout = curtime + ro_time
             result = method(*args, **kwargs)
             memcache.set(cache_key, (ro_timeout, result), time=cachetimeout)
             memcache.delete(ro_key)
+            logging.info("CACHE: Set cache: %s" % cache_key)
             return result
         return _wrapper
     return decorator
