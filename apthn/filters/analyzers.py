@@ -107,7 +107,7 @@ class Price(Analyzer):
     def update_apt_query(self, aptf, q, debug_info):
         upper = aptf.price[1]
         prices = []
-        for i in range(int(upper) / 1000):
+        for i in range(int(upper) / 1000 + 1):
             prices.append(i * 1000)
         q.filter("price_thousands IN", prices)
         debug_info.append(("price_thousands IN", prices))

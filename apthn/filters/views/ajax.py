@@ -1,4 +1,5 @@
 import re
+import logging
 import datetime
 
 from google.appengine.api import memcache
@@ -40,6 +41,7 @@ def ajax_get_count(request):
         size_weights = [1.0] * len(sizes),
         **boolean_data
         )
+    logging.info("Filter: %r" % f.__dict__)
     results, scanned = email.get_matched_apartments(f, look_back)
     count = len(results)
     return HttpResponse(simplejson.dumps({'count': count, 'scanned': scanned}),
