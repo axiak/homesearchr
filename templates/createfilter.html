@@ -20,7 +20,7 @@
   {% endifequal %}
   //]]>
   </script>
-
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.validate.js"></script>
   <script type="text/javascript" src="{{ MEDIA_URL }}js/maps.js"></script>
   <script type="text/javascript" src="{{ MEDIA_URL }}js/create.js"></script>
 
@@ -47,7 +47,7 @@
   font-size: 1.25em;
   font-style: normal;
 }
-  .errorlist, .errorlist li {
+  .errorlist, .errorlist li, .error {
   color: #c00;
   font-size: 0.95em;
   font-weight: bold;
@@ -78,7 +78,7 @@
   via email every day that we find apartments that match your criteria.
 </p>
 
-<form action="" method="post" name="mainform">
+<form action="" method="post" name="mainform" id="mainform">
 <hr>
 <h3>Easy Questions</h3>
 <p>
@@ -87,7 +87,6 @@
 {{ cform.as_p }}
 {{ form.as_p }}
 
-<input type="hidden" name="location-data" id="location-data" value="">
 <hr>
 <h3>Price Option</h3>
 <p><label>
@@ -121,7 +120,7 @@ describe the area you are interested in.
 <input type="button" name="removeone" value="Clear map" onclick="deleteAllCircles();">
 </p>
 
-
+<input type="hidden" name="location-data" id="location-data" class="required" value="">
 <div id="mapDiv">
 <p style="color: red; font-size: 2em;">Google maps loading...</p>
 </div>

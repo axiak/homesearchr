@@ -35,6 +35,7 @@ function get_count() {
     var errors = validate_apt_form();
     if (errors.length) {
         /* handle errors */
+        $("#estimated-amount")[0].innerHTML = "Estimated matches: <small><em>please complete the form</em></small>";
         return;
     }
     var data = {};
@@ -90,8 +91,51 @@ function update_form() {
     //$("#estimated-amount")[0].innerHTML = "Estimated matches: " + window.times;
 }
 
-$(document).ready(function () {
+$(document).ready(function (e) {
         $("input, select").change(function () {
                 update_form();
             });
+
+        $("p.required input, p.required select").each(function (v, elem) {
+                if (elem.className) {
+                    elem.className += " required";
+                }
+                else {
+                    elem.className = "required";
+                }
+            });
+
+        $("#mile-range").slider({
+                range: true,
+                    min: 0,
+                    max: 4,
+                    step: 0.02,
+                    values: [0.2, 2],
+                    slide: function (event, ui) {
+                    $("#mile-output").html(ui.values[0] + "mi to " + ui.values[1] + "mi");
+                    radii[0] = ui.values[0];
+                    radii[1] = ui.values[1];
+                }
+            });
+        $('#mile-output').html("0.2mi to 2mi");
+
+        $("#price-range").slider({
+                range: true,
+                    min: 500,
+                    max: 4000,
+                    step: 5,
+                    values: [800, 2000],
+                    slide: function (event, ui) {
+                    $("#price-output").val('$' + ui.values[0] + " to $" + ui.values[1]);
+                    update_form();
+                }
+            });
+        $('#price-output').val("$800 to $2000");
+
+        $("#id_expires").datepicker({minDate: '+7D', maxDate: '+6M'});
+
+        $("#mainform").validate({
+                debug: true
+                    });
+
     });

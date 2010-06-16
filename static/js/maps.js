@@ -145,37 +145,5 @@ function computeMapData(mapData) {
 window.unload = GUnload;
 
 
-$(document).ready(function (e) {
-        $("#mile-range").slider({
-                range: true,
-                    min: 0,
-                    max: 4,
-                    step: 0.02,
-                    values: [0.2, 2],
-                    slide: function (event, ui) {
-                    $("#mile-output").html(ui.values[0] + "mi to " + ui.values[1] + "mi");
-                    radii[0] = ui.values[0];
-                    radii[1] = ui.values[1];
-                }
-            });
-        $('#mile-output').html("0.2mi to 2mi");
-
-        $("#price-range").slider({
-                range: true,
-                    min: 500,
-                    max: 4000,
-                    step: 5,
-                    values: [800, 2000],
-                    slide: function (event, ui) {
-                    $("#price-output").val('$' + ui.values[0] + " to $" + ui.values[1]);
-                    update_form();
-                }
-            });
-        $('#price-output').val("$800 to $2000");
-
-        $("#id_expires").datepicker({minDate: '+7D', maxDate: '+6M'});
-
-    });
-
 
 

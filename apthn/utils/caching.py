@@ -4,8 +4,9 @@ from google.appengine.api import memcache
 
 from functools import wraps
 
-CACHE_API_VERSION = '1'
+CACHE_API_VERSION = '2'
 CACHE_ADD_RO_TIME = 45 # 45 seconds 'till we run again
+CACHE_ENABLE = True
 
 def cacheview(keyfunc, cachetimeout=86400):
     if cachetimeout < 300:
@@ -13,6 +14,9 @@ def cacheview(keyfunc, cachetimeout=86400):
     else:
         ro_time = int(min(600, cachetimeout * 0.05))
     def decorator(method):
+        if not CACHE_ENABLE:
+            return method
+
         @wraps(method)
         def _wrapper(*args, **kwargs):
             cache_key = keyfunc(*args, **kwargs)

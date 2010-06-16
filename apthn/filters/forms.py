@@ -18,6 +18,8 @@ class DisableFilterForm(forms.Form):
                                label="I was able to find a place")
 
 class EmailForm(forms.Form):
+    required_css_class = "required"
+
     email = forms.EmailField(help_text="Where would you like to be notified?")
 
     def contactstring(self, request):
@@ -25,6 +27,8 @@ class EmailForm(forms.Form):
     
 
 class FilterForm(forms.Form):
+    required_css_class = "required"
+
     expires = forms.DateField(help_text="Until when do you want notifications?")
 
     size = forms.MultipleChoiceField(choices=
