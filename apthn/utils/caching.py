@@ -5,7 +5,7 @@ from google.appengine.api import memcache
 
 from functools import wraps
 
-CACHE_API_VERSION = '7'
+CACHE_API_VERSION = '1'
 CACHE_ADD_RO_TIME = 45 # 45 seconds 'till we run again
 CACHE_ENABLE = True
 
@@ -30,11 +30,11 @@ def cacheview(keyfunc, cachetimeout=86400):
             result = memcache.get(cache_key)
             if result:
                 ro_timeout, result = result
-                if ro_timeout < curtime:
+                if ro_timeout > curtime:
                     logging.info("CACHE: HIT!")
                     return result
                 else:
-                    logging.info("CACHE: Hit but RO timeout")
+                    logging.info("CACHE: Hit but RO timeout: %s, %s" % (ro_timeout, curtime))
             else:
                 logging.info("CACHE: Miss")
 
