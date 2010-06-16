@@ -4,7 +4,7 @@ from google.appengine.api import memcache
 
 from functools import wraps
 
-CACHE_API_VERSION = '2'
+CACHE_API_VERSION = '3'
 CACHE_ADD_RO_TIME = 45 # 45 seconds 'till we run again
 CACHE_ENABLE = True
 
