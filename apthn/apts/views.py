@@ -138,9 +138,9 @@ def count_breakdowns(request):
 
     return HttpResponse(output, mimetype="text/plain")
 
-@caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 7200)
+@caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 7 * 3600)
 def apt_list(request, city):
-    limit = 4000
+    limit = 3000
     query = Apartment.all()
     query.filter("region =", city.upper())
     query.order('-updated')
@@ -156,6 +156,9 @@ def apt_list(request, city):
             d = dict(result._entity)
             for key in bad_keys:
                 del d[key]
+            for key, value in d.items():
+                if isinstance(value, bool):
+                    d[key] = int(value)
             d['updated'] = int(d['updated'].strftime("%s"))
             if d.get('location'):
                 d['location'] = (d['location'].lat, d['location'].lon)
