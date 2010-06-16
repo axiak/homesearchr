@@ -5,15 +5,15 @@ from google.appengine.api import memcache
 
 from functools import wraps
 
-CACHE_API_VERSION = '3'
+CACHE_API_VERSION = '4'
 CACHE_ADD_RO_TIME = 45 # 45 seconds 'till we run again
-CACHE_ENABLE = True
+CACHE_ENABLE = False
 
 def cacheview(keyfunc, cachetimeout=86400):
     if cachetimeout < 300:
         ro_time = None
     else:
-        ro_time = int(min(600, cachetimeout * 0.05))
+        ro_time = int(max(cachetimeout - 600, cachetimeout * 0.95))
     def decorator(method):
         if not CACHE_ENABLE:
             return method
@@ -47,7 +47,7 @@ def cacheview(keyfunc, cachetimeout=86400):
             result = method(*args, **kwargs)
             memcache.set(cache_key, (ro_timeout, result), time=cachetimeout)
             memcache.delete(ro_key)
-            logging.info("CACHE: Set cache: %s" % cache_key)
+            logging.info("CACHE: Set cache: %s (ro_time: %s)" % (cache_key, ro_timeout - curtime))
             return result
         return _wrapper
     return decorator
