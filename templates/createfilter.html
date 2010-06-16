@@ -84,7 +84,6 @@
 <p>
   These questions should be fairly straightforward.
 </p>
-{{ cform.as_p }}
 {{ form.as_p }}
 
 <hr>
@@ -129,6 +128,12 @@ describe the area you are interested in.
 Estimated matches: <small><em>please complete the form</em></small>
 </div>
 <img src="{{ MEDIA_URL }}img/loading.gif" title="loading" id="loading-image" border="0">
+
+<div id="contact-info-form">
+<h3>Contact Info</h3>
+<p>How we will inform you of the apartments.</p>
+{{ cform.as_p }}
+</div>
 
 <p>
 <input type="submit" value="Add notification!">
