@@ -105,20 +105,6 @@ $(document).ready(function (e) {
                 }
             });
 
-        $("#mile-range").slider({
-                range: true,
-                    min: 0,
-                    max: 4,
-                    step: 0.02,
-                    values: [0.2, 2],
-                    slide: function (event, ui) {
-                    $("#mile-output").html(ui.values[0] + "mi to " + ui.values[1] + "mi");
-                    radii[0] = ui.values[0];
-                    radii[1] = ui.values[1];
-                }
-            });
-        $('#mile-output').html("0.2mi to 2mi");
-
         $("#price-range").slider({
                 range: true,
                     min: 500,
