@@ -14,23 +14,28 @@ var pinicons = {}
 $(document).ready(function (e) {
         if (GBrowserIsCompatible()) {
             container = document.getElementById("mapDiv");
-            map = new GMap2(container, {draggableCursor:"crosshair"});
+            map = new GMap2(container);
             map.setCenter(centerPoint, zoom);
 
             map.addControl(new GScaleControl());
             map.addControl(new GLargeMapControl());
             map.addControl(new GMapTypeControl());
- 
+
+            var geometryControls = new GeometryControls();
+            var polygonControl = new PolygonControl();
+            geometryControls.addControl(polygonControl);
+            map.addControl(geometryControls);
+
             //map.enableContinuousZoom();
             map.enableScrollWheelZoom();		
  
             var pos = new GControlPosition(G_ANCHOR_TOP_LEFT, new GSize(0, 620));
             /*map.addControl(new MStatusControl({position:pos}));*/
-            GEvent.addListener(map, "click", function (ol, pt) {
+            /*GEvent.addListener(map, "click", function (ol, pt) {
                     drawCircle(pt);
                     update_form();
                 });
-	    
+            */
 	    //make colorful pins
 	    for(var i in colors){		
 		var icon = new GIcon(G_DEFAULT_ICON)
@@ -65,6 +70,7 @@ function place_colorful_pins(results, status) {
 }
 
 function drawCircle(center) {
+    return;
     var radius1 = radii[0];
     var radius2 = radii[1];
 

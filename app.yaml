@@ -2,7 +2,7 @@ application: apthuntnotifier
 version: 2
 runtime: python
 api_version: 1
-default_expiration: "1d"
+default_expiration: "6h"
 
 handlers:
 - url: /favicon.ico

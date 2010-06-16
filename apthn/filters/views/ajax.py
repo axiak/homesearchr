@@ -17,17 +17,8 @@ look_back = datetime.datetime.now() - datetime.timedelta(days=2)
 def ajax_get_count(request):
     city = request.META['HTTP_REFERER'].split('?')[0].rstrip('/').split('/')[-1]
 
-    locations = []
-    atoms = map(float, request.POST.get('location-data').split(','))
-    for i in range(0, len(atoms), 4):
-        locations.append(((atoms[i], atoms[i + 1]),
-                          atoms[i + 2], atoms[i + 3]))
     m = price_re.search(request.POST.get('price'))
     lprice, hprice = map(float, m.groups())
-    distances = []
-    for item in locations:
-        distances.extend(item[1:])
-
     cinfo = request.POST.get('email')
 
     boolean_data = {}
@@ -41,8 +32,9 @@ def ajax_get_count(request):
     f = AptFilter(
         active = True,
         region = city.upper(),
-        distance_centers = [db.GeoPt(*x[0]) for x in locations],
-        distances = distances,
+        distance_centers = [],
+        distances = [],
+        polygons = request.POST['location-data'],
         price = [int(lprice), int(hprice)],
         size_names = sizes,
         size_weights = [1.0] * len(sizes),

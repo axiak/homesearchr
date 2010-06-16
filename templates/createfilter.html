@@ -21,6 +21,8 @@
   //]]>
   </script>
   <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.validate.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/geometrycontrols.raw.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/polygoncontrol.raw.js"></script>
   <script type="text/javascript" src="{{ MEDIA_URL }}js/maps.js"></script>
   <script type="text/javascript" src="{{ MEDIA_URL }}js/create.js"></script>
 
@@ -103,22 +105,9 @@
 <hr>
 <h3>Location</h3>
 <p><label>
-The location filters are similar to the price filter. That is,
-<em>the lower cutoff is the point at which you don't care about distance</em>.
-<em>The upper cutoff is the point at which you are no longer willing to consider it.</em> Once you set your distances, click on the map to draw circles that
-describe the area you are interested in.
+Please draw the region in the map for which you would like a place.
 </label>
 </p>
-<p>
-<div id="mile-container">
-  <span id="mile-output" style="color: #444; font-weight: bold;">&nbsp;</span>
-  <table border="0" style="width: 100%;"><tr><td>0mi</td><td style="width: 100%;"><div id="mile-range"></div>
-        </td><td>4mi</td></tr></table>
-</div>
-<input type="button" name="removeone" value="Remove last circle" onclick="deleteOneCircle();">
-<input type="button" name="removeone" value="Clear map" onclick="deleteAllCircles();">
-</p>
-
 <input type="hidden" name="location-data" id="location-data" class="required" value="">
 <div id="mapDiv">
 <p style="color: red; font-size: 2em;">Google maps loading...</p>

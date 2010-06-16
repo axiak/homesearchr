@@ -90,7 +90,7 @@ field_to_str = {
 }
 
 def count_breakdowns(request):
-    INTERVAL = 400
+    INTERVAL = 200
     try:
         count_data = pickle.loads(request.POST['count_data'].decode('base64'))
     except:
@@ -108,7 +108,12 @@ def count_breakdowns(request):
         query.with_cursor(cursor)
 
     results = query.fetch(INTERVAL)
+
+    from apthn.utils import geohash # Delete later
     for apt in results:
+        if apt.location:  # Delete later
+            apt.geohash = str(geohash.Geohash((apt.location.lon, apt.location.lat)))  # Delete later
+            apt.put() # Delete later
         for field, mapper in field_to_str.items():
             count_data['%s__%s' % (field, mapper(getattr(apt, field)))] += 1
 

@@ -39,17 +39,9 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
         form = FilterForm(request.POST, initial=initial)
         if form.is_valid() and contactform.is_valid():
             cinfo = contactform.contactstring(request)
-            locations = []
-            atoms = map(float, request.POST.get('location-data').split(','))
-            for i in range(0, len(atoms), 4):
-                locations.append(((atoms[i], atoms[i + 1]),
-                                 atoms[i + 2], atoms[i + 3]))
 
             m = price_re.search(request.POST.get('price'))
             lprice, hprice = map(float, m.groups())
-            distances = []
-            for item in locations:
-                distances.extend(item[1:])
 
             apth = AptHunter.all().filter("contactinfo =", cinfo)
             apth = apth.get()
@@ -78,8 +70,9 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
                 apth = apth,
                 region = city.upper(),
                 expires = form.cleaned_data['expires'],
-                distance_centers = [db.GeoPt(*x[0]) for x in locations],
-                distances = distances,
+                distance_centers = [], # Disabled
+                distances = [], # Disabled
+                polygons = request.POST["location-data"],
                 price = [int(lprice), int(hprice)],
                 size_names = form.cleaned_data['size'],
                 size_weights = [1.0] * len(form.cleaned_data['size']),
