@@ -79,7 +79,6 @@
 <p>
   These questions should be fairly straightforward.
 </p>
-{{ cform.as_p }}
 {{ form.as_p }}
 
 <input type="hidden" name="location-data" id="location-data" value="">
@@ -125,6 +124,12 @@ describe the area you are interested in.
 Estimated matches: N/A 
 </div>
 <img src="{{ MEDIA_URL }}img/loading.gif" title="loading" id="loading-image" border="0">
+
+
+
+<h3>Contact</h3>
+<p>Let us know how to contact you with filter results.  Optionally, add login information so you can manage results here.</p>
+{{ cform.as_p }}
 
 <p>
 <input type="submit" value="Add notification!">

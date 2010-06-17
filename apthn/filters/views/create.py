@@ -22,15 +22,12 @@ price_re = re.compile(r'\$([.\d]+).*?\$([.\d]+)')
 
 
 def create_filter_key(request, city="boston", template="createfilter.html", *args, **kwargs):
-    if request.user and getattr(request.user, 'is_authenticated', lambda : True)():
-        return None
     if request.method == 'POST':
         return None
-    
     return 'cf__%s%s' % (city, template)
 
 @cacheview(create_filter_key)
-def create_filter(request, city="boston", template="createfilter.html", initial={}, ContactForm=EmailForm):
+def create_filter(request, city="boston", template="createfilter.html", initial={}, ContactForm=UserForm):
     city_info = settings.CITIES.get(city.lower())
     center = settings.CITY_CENTERS[city.lower()]
 
@@ -91,15 +88,11 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
             email.enqueue_notify(cinfo)
             return HttpResponseRedirect('../success/')
     else:
-        form = FilterForm()
-        contactform = ContactForm()
-
-    context = {'user': request.user,
-               'form': form,
-               'cform': contactform,
-               'centerlat': center[0],
-               'centerlng': center[1],
-               'mapzoom': center[2],}
+        context = {'form': FilterForm(),
+                   'cform': ContactForm(),
+                   'centerlat': center[0],
+                   'centerlng': center[1],
+                   'mapzoom': center[2],}
 
     context['AJAX_KEY'] = settings.GOOGLE_AJAX_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])
     context['MAP_KEY'] = settings.GOOGLE_MAP_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])

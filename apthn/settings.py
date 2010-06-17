@@ -37,7 +37,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'apthn.users.middleware.AppEngineAuthMiddleware',
+    'apthn.users.middleware.authentication_middleware',
     'facebook.djangofb.FacebookMiddleware',
     'apthn.errors.middleware.FixEmailsMiddleware',
 )

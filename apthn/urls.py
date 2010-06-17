@@ -4,6 +4,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('',
        (r'^apts/', include('apthn.apts.urls')),
        (r'^filters/', include('apthn.filters.urls')),
+       (r'^users/', include('apthn.users.urls')), 
        (r'^/?$', 'apthn.filters.views.main'),
        (r'^fb/', include('apthn.facebook.urls')),
 )

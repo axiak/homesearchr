@@ -59,5 +59,15 @@
   </select>
   <input type="button" value="Create filter!" onclick="createFilter();">
 </p>
+<p>
+  Or, if you've been here before, you could log in:<br>
+  <form action="users/login">
+    Username:<input type="text" value="username" name="username">
+    Password:<input type="password" name="password">
+    <input type="submit" name="submit">
+  </form>
+  <br>
+  <a href="users/forgot">forgot login details</a>
+</p>
 
 {% endblock %}
