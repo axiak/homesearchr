@@ -22,6 +22,7 @@ class AptFilter(BaseModel):
 
     distance_centers = db.ListProperty(db.GeoPt)
     distances = db.ListProperty(float)
+    polygons = db.TextProperty()
 
     cats = db.IntegerProperty()
     concierge = db.IntegerProperty()
@@ -34,6 +35,31 @@ class AptFilter(BaseModel):
 
     size_names = db.StringListProperty()
     size_weights = db.ListProperty(float)
+
+    @property
+    def nice_polygons(self):
+        if hasattr(self, '_nice_polygons'):
+            return self._nice_polygons
+
+        if not self.polygons:
+            return []
+
+        polygons = []
+        polygon = []
+        atoms = self.polygons.strip(',').split(',')
+        atoms.append('p')
+        for atom in atoms:
+            if atom.lower() == 'p':
+                polygon_collapse = [(polygon[i], polygon[i + 1])
+                                    for i in range(0, len(polygon), 2)]
+                if not polygon:
+                    continue
+                polygons.append(polygon_collapse)
+                polygon = []
+            else:
+                polygon.append(float(atom))
+        self._nice_polygons = polygons
+        return polygons
 
     def get_email(self):
         if self.user:

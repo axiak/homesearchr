@@ -11,6 +11,7 @@ from apthn.users.decorators import login_required
 from apthn.filters.forms import FilterForm, EmailForm
 from apthn.filters.models import AptFilter
 from apthn.users.models import AptHunter
+from apthn.users.forms import UserForm
 
 from apthn.filters.views import email
 
@@ -24,7 +25,7 @@ price_re = re.compile(r'\$([.\d]+).*?\$([.\d]+)')
 def create_filter_key(request, city="boston", template="createfilter.html", *args, **kwargs):
     if request.method == 'POST':
         return None
-    return 'cf__%s%s' % (city, template)
+    return 'cf_%s%s' % (city, template)
 
 @cacheview(create_filter_key)
 def create_filter(request, city="boston", template="createfilter.html", initial={}, ContactForm=UserForm):
@@ -36,17 +37,9 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
         form = FilterForm(request.POST, initial=initial)
         if form.is_valid() and contactform.is_valid():
             cinfo = contactform.contactstring(request)
-            locations = []
-            atoms = map(float, request.POST.get('location-data').split(','))
-            for i in range(0, len(atoms), 4):
-                locations.append(((atoms[i], atoms[i + 1]),
-                                 atoms[i + 2], atoms[i + 3]))
 
             m = price_re.search(request.POST.get('price'))
             lprice, hprice = map(float, m.groups())
-            distances = []
-            for item in locations:
-                distances.extend(item[1:])
 
             apth = AptHunter.all().filter("contactinfo =", cinfo)
             apth = apth.get()
@@ -75,8 +68,9 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
                 apth = apth,
                 region = city.upper(),
                 expires = form.cleaned_data['expires'],
-                distance_centers = [db.GeoPt(*x[0]) for x in locations],
-                distances = distances,
+                distance_centers = [], # Disabled
+                distances = [], # Disabled
+                polygons = request.POST["location-data"],
                 price = [int(lprice), int(hprice)],
                 size_names = form.cleaned_data['size'],
                 size_weights = [1.0] * len(form.cleaned_data['size']),
@@ -86,17 +80,27 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
 
             namecinfo = cinfo.replace('@', 'AT').replace('.', 'DOT')
             email.enqueue_notify(cinfo)
-            return HttpResponseRedirect('../success/')
+            response = HttpResponseRedirect('../success/')
+            user = AptHunter.make_user(contactform)
+            user.last_city = city
+            db.put(user)
+            response.set_cookie("sessioncookie", user.sessioncookie)
+            response.set_cookie("username", user.username)
+            return response
     else:
+        if not request.user:
+            cform = ContactForm()
+        else:
+            cform = None
         context = {'form': FilterForm(),
-                   'cform': ContactForm(),
+                   'cform': cform,
                    'centerlat': center[0],
                    'centerlng': center[1],
                    'mapzoom': center[2],}
 
     context['AJAX_KEY'] = settings.GOOGLE_AJAX_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])
     context['MAP_KEY'] = settings.GOOGLE_MAP_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])
-
+    context["CITY"] = city
     return direct_to_template(request, template, context)
 
 def create_filter_success(request, city="boston"):

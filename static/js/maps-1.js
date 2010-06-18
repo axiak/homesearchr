@@ -14,58 +14,63 @@ var pinicons = {}
 $(document).ready(function (e) {
         if (GBrowserIsCompatible()) {
             container = document.getElementById("mapDiv");
-            map = new GMap2(container, {draggableCursor:"crosshair"});
+            map = new GMap2(container);
             map.setCenter(centerPoint, zoom);
 
             map.addControl(new GScaleControl());
             map.addControl(new GLargeMapControl());
             map.addControl(new GMapTypeControl());
- 
+
+            var geometryControls = new GeometryControls();
+            var polygonControl = new PolygonControl();
+            geometryControls.addControl(polygonControl);
+            map.addControl(geometryControls);
+
             //map.enableContinuousZoom();
             map.enableScrollWheelZoom();		
  
             var pos = new GControlPosition(G_ANCHOR_TOP_LEFT, new GSize(0, 620));
             /*map.addControl(new MStatusControl({position:pos}));*/
-            GEvent.addListener(map, "click", function (ol, pt) {
+            /*GEvent.addListener(map, "click", function (ol, pt) {
                     drawCircle(pt);
                     update_form();
                 });
-	    
+            */
 	    //make colorful pins
 	    for(var i in colors){		
 		var icon = new GIcon(G_DEFAULT_ICON)
 		icon.image = ["/static/img/pins/",colors[i],".png"].join("")
 		pinicons[colors[i]] = icon
 	    }
-
 	    //place colorful pins
-	    $.getJSON("/static/json/apts.json", place_colorful_pins)
+	    $.getJSON(listingURL, place_colorful_pins)
        }
     });
 
 function price_icon(price){
     if(price < 1000)
-	return pinicons.orange
+	return pinicons.orange;
     if(price < 1500)
-	return pinicons.green
+	return pinicons.green;
     if(price < 2000)
-	return pinicons.blue
-    return pinicons.purple
+	return pinicons.blue;
+    return pinicons.purple;
 }
 
 function place_colorful_pins(results, status) {
     // lol what does status even do?
-    var apts = results.results
+    var apts = results.results;
     for(var i=0; i<200; i++){
-	var apt = apts[i]
-	var ll = new GLatLng(apt.location[0],apt.location[1])
-	var marker = new GMarker(ll, {icon:price_icon(apt.price)})
-	map.addOverlay(marker)
+	var apt = apts[i];
+	var ll = new GLatLng(apt.location[0],apt.location[1]);
+	var marker = new GMarker(ll, {icon:price_icon(apt.price)});
+	map.addOverlay(marker);
     }
 
 }
 
 function drawCircle(center) {
+    return;
     var radius1 = radii[0];
     var radius2 = radii[1];
 
@@ -145,38 +150,6 @@ function computeMapData(mapData) {
 
 window.unload = GUnload;
 
-
-$(document).ready(function (e) {
-        $("#mile-range").slider({
-                range: true,
-                    min: 0,
-                    max: 4,
-                    step: 0.02,
-                    values: [0.2, 2],
-                    slide: function (event, ui) {
-                    $("#mile-output").html(ui.values[0] + "mi to " + ui.values[1] + "mi");
-                    radii[0] = ui.values[0];
-                    radii[1] = ui.values[1];
-                }
-            });
-        $('#mile-output').html("0.2mi to 2mi");
-
-        $("#price-range").slider({
-                range: true,
-                    min: 500,
-                    max: 4000,
-                    step: 5,
-                    values: [800, 2000],
-                    slide: function (event, ui) {
-                    $("#price-output").val('$' + ui.values[0] + " to $" + ui.values[1]);
-                    update_form();
-                }
-            });
-        $('#price-output').val("$800 to $2000");
-
-        $("#id_expires").datepicker({minDate: '+7D', maxDate: '+6M'});
-
-    });
 
 
 

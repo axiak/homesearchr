@@ -90,7 +90,7 @@ field_to_str = {
 }
 
 def count_breakdowns(request):
-    INTERVAL = 400
+    INTERVAL = 200
     try:
         count_data = pickle.loads(request.POST['count_data'].decode('base64'))
     except:
@@ -108,6 +108,7 @@ def count_breakdowns(request):
         query.with_cursor(cursor)
 
     results = query.fetch(INTERVAL)
+
     for apt in results:
         for field, mapper in field_to_str.items():
             count_data['%s__%s' % (field, mapper(getattr(apt, field)))] += 1
@@ -137,21 +138,37 @@ def count_breakdowns(request):
 
     return HttpResponse(output, mimetype="text/plain")
 
-@caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 3600)
+@caching.cacheview(lambda request, city: 'aptlist_%s' % city.lower(), 22000)
 def apt_list(request, city):
+    limit = 3000
     query = Apartment.all()
+    query.filter("region =", city.upper())
+    query.order('-updated')
     bad_keys = ('price_thousands', 'region', 'updated_hour', 'updated_day',
                 'addr', 'location_accuracy', 'geohash')
+
     results = []
-    for result in query.fetch(1000):
-        d = dict(result._entity)
-        for key in bad_keys:
-            del d[key]
-        d['updated'] = int(d['updated'].strftime("%s"))
-        if d.get('location'):
-            d['location'] = (d['location'].lat, d['location'].lon)
-        else:
-            continue
-        results.append(d)
+    while True:
+        queryresults = query.fetch(1000)
+        if not queryresults:
+            break
+        for result in queryresults:
+            d = dict(result._entity)
+            for key in bad_keys:
+                del d[key]
+            for key, value in d.items():
+                if isinstance(value, bool):
+                    d[key] = int(value)
+            d['updated'] = int(d['updated'].strftime("%s"))
+            if d.get('location'):
+                d['location'] = (d['location'].lat, d['location'].lon)
+            else:
+                continue
+            results.append(d)
+            if len(results) >= limit:
+                break
+        if len(results) >= limit:
+            break
+
     return HttpResponse(simplejson.dumps({'results': results}),
                         mimetype='application/json')

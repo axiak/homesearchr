@@ -107,7 +107,7 @@ class Price(Analyzer):
     def update_apt_query(self, aptf, q, debug_info):
         upper = aptf.price[1]
         prices = []
-        for i in range(int(upper) / 1000):
+        for i in range(int(upper) / 1000 + 1):
             prices.append(i * 1000)
         q.filter("price_thousands IN", prices)
         debug_info.append(("price_thousands IN", prices))
@@ -276,11 +276,36 @@ class Location(Analyzer):
 
         if results.get('location'):
             ll = results.get('location')
-            results['geohash'] = str(geohash.Geohash((ll.lat, ll.lon)))
+            results['geohash'] = str(geohash.Geohash((ll.lon, ll.lat)))
 
         return results
 
+
     def update_apt_query(self, aptf, q, debug_info):
+        if not aptf.polygons:
+            return self.circles_update_apt_query(aptf, q, debug_info)
+        min_lat, max_lat, min_lon, max_lon = 1000, -1000, 1000, -1000
+
+        for polygon in aptf.nice_polygons:
+            for lat, lon in polygon:
+                if lat < min_lat:
+                    min_lat = lat
+                elif lat > max_lat:
+                    max_lat = lat
+                if lon < min_lon:
+                    min_lon = lon
+                elif lon > max_lon:
+                    max_lon = lon
+
+        val1 = str(geohash.Geohash((min_lon, min_lat)))
+        val2 = str(geohash.Geohash((max_lon, max_lat)))
+        q.filter("geohash >=", val1)
+        q.filter("geohash <=", val2)
+        debug_info.append(("geohash >=", val1))
+        debug_info.append(("geohash <=", val2))
+
+
+    def circles_update_apt_query(self, aptf, q, debug_info):
         min_lat, max_lat, min_lon, max_lon = 1000, -1000, 1000, -1000
 
         # 0.014457066996884592 = 180 / (2 * pi * radius of earth)
@@ -307,6 +332,17 @@ class Location(Analyzer):
         debug_info.append(("geohash <=", val2))
 
     def create_weight(self, aptf, apartment):
+        if not aptf.polygons:
+            return self.circles_create_weight(aptf, apartment)
+        if not apartment.location:
+            return 0
+        alat, alon = apartment.location.lat, apartment.location.lon
+        for polygon in aptf.nice_polygons:
+            if self._pnt_in_poly(polygon, (alat, alon)):
+                return 1
+        return 0
+
+    def circles_create_weight(self, aptf, apartment):
         if not apartment.location:
             return 0
         alat, alon = apartment.location.lat, apartment.location.lon
@@ -321,6 +357,26 @@ class Location(Analyzer):
                 max_distance_score = distance_score
         return max_distance_score ** 2
 
+    def _pnt_in_poly(self, polygon, point):
+        # Check to see if a point is in polygon
+        # Ref: http://www.ariel.com.au/a/python-point-int-poly.html
+        n = len(polygon)
+        inside = False
+
+        x, y = point
+        p1x, p1y = polygon[0]
+        for i in range(n+1):
+            p2x, p2y = polygon[i % n]
+            if y > min(p1y, p2y):
+                if y <= max(p1y, p2y):
+                    if x <= max(p1x, p2x):
+                        if p1y != p2y:
+                            xinters = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
+                        if p1x == p2x or x <= xinters:
+                            inside = not inside
+            p1x, p1y = p2x, p2y
+
+        return inside
 
     def _gcdistance(self, lat1, lon1, lat2, lon2):
         f = math.radians

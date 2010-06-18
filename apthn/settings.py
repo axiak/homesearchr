@@ -37,7 +37,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'apthn.users.middleware.authentication_middleware',
+    'apthn.users.middleware.AuthenticationMiddleware',
     'facebook.djangofb.FacebookMiddleware',
     'apthn.errors.middleware.FixEmailsMiddleware',
 )
@@ -47,6 +47,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "apthn.context_processors.auth",
+    "apthn.context_processors.addreq",
     "apthn.facebook.context_processors.facebook",
     )
 
@@ -59,7 +60,6 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'appengine_django',
-    'django.contrib.sessions',
     'apthn.users',
     'apthn.apts',
     'apthn.filters',

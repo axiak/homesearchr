@@ -22,3 +22,16 @@ cron:
 #- description: Delete old apts
 #  url: /clean-apts/
 #  schedule: every 1 minutes
+
+- description: Update boston prefetch
+  url: /apts/list/boston/json/
+  schedule: every 6 hours
+
+- description: Update newyork prefetch
+  url: /apts/list/newyork/json/
+  schedule: every 6 hours
+
+- description: Update sfbay prefetch
+  url: /apts/list/sfbay/json/
+  schedule: every 6 hours
+

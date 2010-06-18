@@ -201,4 +201,3 @@ def send_email(aptf, results, admin_send=False):
     msg.html = html
 
     msg.send()
-

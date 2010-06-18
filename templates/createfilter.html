@@ -13,11 +13,18 @@
   google.load("jqueryui", "1.8.0");
   var zoom = {{ mapzoom }};
   var centerPoint = new GLatLng({{ centerlat }}, {{ centerlng }});
+  {% ifequal REQUEST.META.SERVER_NAME "localhost" %}
+  var listingURL = "/static/json/apts.json";
+  {% else %} 
+  var listingURL = "/apts/list/{{ CITY }}/json/";
+  {% endifequal %}
   //]]>
   </script>
-
-  <script type="text/javascript" src="{{ MEDIA_URL }}js/maps.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}js/create.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.validate.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/geometrycontrols.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/polygoncontrol.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/maps-1.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/create-2.js"></script>
 
 <style type="text/css">
   #mapDiv {
@@ -42,7 +49,7 @@
   font-size: 1.25em;
   font-style: normal;
 }
-  .errorlist, .errorlist li {
+  .errorlist, .errorlist li, .error {
   color: #c00;
   font-size: 0.95em;
   font-weight: bold;
@@ -73,7 +80,7 @@
   via email every day that we find apartments that match your criteria.
 </p>
 
-<form action="" method="post" name="mainform">
+<form action="" method="post" name="mainform" id="mainform">
 <hr>
 <h3>Easy Questions</h3>
 <p>
@@ -81,7 +88,6 @@
 </p>
 {{ form.as_p }}
 
-<input type="hidden" name="location-data" id="location-data" value="">
 <hr>
 <h3>Price Option</h3>
 <p><label>
@@ -99,37 +105,23 @@
 <hr>
 <h3>Location</h3>
 <p><label>
-The location filters are similar to the price filter. That is,
-<em>the lower cutoff is the point at which you don't care about distance</em>.
-<em>The upper cutoff is the point at which you are no longer willing to consider it.</em> Once you set your distances, click on the map to draw circles that
-describe the area you are interested in.
+Please draw the region in the map for which you would like a place.
 </label>
 </p>
-<p>
-<div id="mile-container">
-  <span id="mile-output" style="color: #444; font-weight: bold;">&nbsp;</span>
-  <table border="0" style="width: 100%;"><tr><td>0mi</td><td style="width: 100%;"><div id="mile-range"></div>
-        </td><td>4mi</td></tr></table>
-</div>
-<input type="button" name="removeone" value="Remove last circle" onclick="deleteOneCircle();">
-<input type="button" name="removeone" value="Clear map" onclick="deleteAllCircles();">
-</p>
-
-
+<input type="hidden" name="location-data" id="location-data" class="required" value="">
 <div id="mapDiv">
 <p style="color: red; font-size: 2em;">Google maps loading...</p>
 </div>
 
 <div id="estimated-amount">
-Estimated matches: N/A 
+Estimated matches: <small><em>please complete the form</em></small>
 </div>
 <img src="{{ MEDIA_URL }}img/loading.gif" title="loading" id="loading-image" border="0">
-
-
 
 <h3>Contact</h3>
 <p>Let us know how to contact you with filter results.  Optionally, add login information so you can manage results here.</p>
 {{ cform.as_p }}
+</div>
 
 <p>
 <input type="submit" value="Add notification!">

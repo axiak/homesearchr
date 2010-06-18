@@ -7,6 +7,13 @@ function validate_form() {
     if (!$("#id_expires")[0].value)
         errors.push("Please enter a valid expiration date.");
 
+    return validate_apt_form(errors);
+}
+
+function validate_apt_form(errors) {
+    if (typeof(errors) != "object") {
+        errors = new Array();
+    }
     var size_selected = false;
     var options = $("#id_size")[0].options;
     for (var i=0; i < options.length; i++) {
@@ -25,9 +32,10 @@ function validate_form() {
 }
 
 function get_count() {
-    var errors = validate_form();
+    var errors = validate_apt_form();
     if (errors.length) {
         /* handle errors */
+        $("#estimated-amount")[0].innerHTML = "Estimated matches: <small><em>please complete the form</em></small>";
         return;
     }
     var data = {};
@@ -83,8 +91,34 @@ function update_form() {
     //$("#estimated-amount")[0].innerHTML = "Estimated matches: " + window.times;
 }
 
-$(document).ready(function () {
+$(document).ready(function (e) {
         $("input, select").change(function () {
                 update_form();
             });
+
+        $("p.required input, p.required select").each(function (v, elem) {
+                if (elem.className) {
+                    elem.className += " required";
+                }
+                else {
+                    elem.className = "required";
+                }
+            });
+
+        $("#price-range").slider({
+                range: true,
+                    min: 500,
+                    max: 4000,
+                    step: 5,
+                    values: [800, 2000],
+                    slide: function (event, ui) {
+                    $("#price-output").val('$' + ui.values[0] + " to $" + ui.values[1]);
+                    update_form();
+                }
+            });
+        $('#price-output').val("$800 to $2000");
+
+        $("#id_expires").datepicker({minDate: '+7D', maxDate: '+6M'});
+
+        $("#mainform").validate();
     });
