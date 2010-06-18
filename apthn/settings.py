@@ -119,3 +119,4 @@ FACEBOOK_CALLBACK_PATH = '/facebook/'
 
 YAHOO_APPID = 'u5Q_QtXV34GukrAFoyQi2siRVj7tU7MSLyAlKjmZMJS3u.1VFUV0NEwevKHD3uLjDSHk'
 
+SECRET_KEY = "supar sekrit tel no1"
