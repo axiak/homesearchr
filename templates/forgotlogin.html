@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+{% if invalid_reset_code %}
+<p>Your reset code is invalid.  This could mean that someone has already used it, or it could mean that someone logged in as you after you requested the code.  If this situation persists, contact us.</p>
+{% endif %}
+
+{% if email %}
+  <p>The specified email address, {{ email }}, does not appear to be in the database.  Try again or contact us.</p>
+{% endif %}
+
+<p>
+  Remind the program of your email address and it will tell you your username and let you reset your password.
+</p>
+<p>
+  <form action="/users/forgot">
+    Email: <input type="text" name="email"> <input type="submit" name="submit">
+  </form>
+</p>
+
+
+<!-- {{ disable }} -->
+
+{% endblock %}
