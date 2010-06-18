@@ -36,8 +36,8 @@ def forgot(request):
     # it should be easy enough to predict this reset cookie
     h = hashlib.sha1()
     h.update(hunter.username)
-    h.update(str(datetime.datetime.now))
-    h.update("supar sekrit tel no1")
+    h.update(str(datetime.datetime.now()))
+    h.update(settings.SECRET_KEY)
     resetcookie = h.hexdigest() + "reset"
     hunter.sessioncookie = resetcookie
     db.put(hunter)
