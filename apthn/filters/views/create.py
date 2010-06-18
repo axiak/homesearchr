@@ -32,71 +32,71 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
     city_info = settings.CITIES.get(city.lower())
     center = settings.CITY_CENTERS[city.lower()]
 
-    if request.method == 'POST':
-        contactform = ContactForm(request.POST, initial=initial)
-        form = FilterForm(request.POST, initial=initial)
-        if form.is_valid() and contactform.is_valid():
-            cinfo = contactform.contactstring(request)
+    contactform = ContactForm(request.POST or None, initial=initial)
+    form = FilterForm(request.POST or None, initial=initial)
+    if form.is_valid() and contactform.is_valid():
+        cinfo = contactform.contactstring(request)
 
-            m = price_re.search(request.POST.get('price'))
-            lprice, hprice = map(float, m.groups())
+        m = price_re.search(request.POST.get('price'))
+        lprice, hprice = map(float, m.groups())
 
-            apth = AptHunter.all().filter("contactinfo =", cinfo)
-            apth = apth.get()
-            if apth:
-                # Deactivate any old ones
-                q = AptFilter.all().filter("apth =", apth)
-                q.filter("active =", True)
-                for result in q.fetch(1000):
-                    result.active = False
-                    result.disable_status = "Replaced, Replaced"
-                    result.put()
+        apth = AptHunter.all().filter("contactinfo =", cinfo)
+        apth = apth.get()
+        if apth:
+            # Deactivate any old ones
+            q = AptFilter.all().filter("apth =", apth)
+            q.filter("active =", True)
+            for result in q.fetch(1000):
+                result.active = False
+                result.disable_status = "Replaced, Replaced"
+                result.put()
 
-            boolean_data = {}
-            for key in ('cats', 'concierge', 'washerdryer', 'heat', 'hotwater',
-                        'brokerfee'):
-                boolean_data[key] = int(form.cleaned_data[key])
+        boolean_data = {}
+        for key in ('cats', 'concierge', 'washerdryer', 'heat', 'hotwater',
+                    'brokerfee'):
+            boolean_data[key] = int(form.cleaned_data[key])
 
-            apth = AptHunter(key_name=cinfo,
-                             contactinfo=cinfo,
-                             first_created=datetime.datetime.now())
-            apth.put()
+        apth = AptHunter(key_name=cinfo,
+                         contactinfo=cinfo,
+                         first_created=datetime.datetime.now())
+        apth.put()
 
-            # Create Filter
-            f = AptFilter(
-                active = True,
-                apth = apth,
-                region = city.upper(),
-                expires = form.cleaned_data['expires'],
-                distance_centers = [], # Disabled
-                distances = [], # Disabled
-                polygons = request.POST["location-data"],
-                price = [int(lprice), int(hprice)],
-                size_names = form.cleaned_data['size'],
-                size_weights = [1.0] * len(form.cleaned_data['size']),
-                **boolean_data
-                )
-            f.put()
+        # Create Filter
+        f = AptFilter(
+            active = True,
+            apth = apth,
+            region = city.upper(),
+            expires = form.cleaned_data['expires'],
+            distance_centers = [], # Disabled
+            distances = [], # Disabled
+            polygons = request.POST["location-data"],
+            price = [int(lprice), int(hprice)],
+            size_names = form.cleaned_data['size'],
+            size_weights = [1.0] * len(form.cleaned_data['size']),
+            **boolean_data
+            )
+        f.put()
 
-            namecinfo = cinfo.replace('@', 'AT').replace('.', 'DOT')
-            email.enqueue_notify(cinfo)
-            response = HttpResponseRedirect('../success/')
-            user = AptHunter.make_user(contactform)
-            user.last_city = city
-            db.put(user)
-            response.set_cookie("sessioncookie", user.sessioncookie)
-            response.set_cookie("username", user.username)
-            return response
+        namecinfo = cinfo.replace('@', 'AT').replace('.', 'DOT')
+        email.enqueue_notify(cinfo)
+        response = HttpResponseRedirect('../success/')
+        user = AptHunter.make_user(contactform)
+        user.last_city = city
+        db.put(user)
+        response.set_cookie("sessioncookie", user.sessioncookie)
+        response.set_cookie("username", user.username)
+        return response
+
+    if not request.user:
+        cform = ContactForm()
     else:
-        if not request.user:
-            cform = ContactForm()
-        else:
-            cform = None
-        context = {'form': FilterForm(),
-                   'cform': cform,
-                   'centerlat': center[0],
-                   'centerlng': center[1],
-                   'mapzoom': center[2],}
+        cform = None
+
+    context = {'form': FilterForm(),
+               'cform': cform,
+               'centerlat': center[0],
+               'centerlng': center[1],
+               'mapzoom': center[2],}
 
     context['AJAX_KEY'] = settings.GOOGLE_AJAX_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])
     context['MAP_KEY'] = settings.GOOGLE_MAP_KEYS.get(request.META['HTTP_HOST'].lower().split(':')[0])
