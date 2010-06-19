@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<p>
+  Now that you've logged in, the system isn't sure where to put you.  Where do you want to look for places to live?
+</p>
+<p>
+  <form action="/users/wheredoyouwanttogotoday">
+    <select name="city" id="city">
+      <option value="boston">Boston</option>
+      <option value="newyork">New York</option>
+      <!--<option value="losangeles">Los Angeles</option>-->
+      <option value="sfbay">San Franciso</option>
+      <!--<option value="chicago">Chicago</option>-->
+    </select>
+    <input type="submit" value="Create filter!">
+  </form>
+</p>
+
+<!-- {{ disable }} -->
+
+{% endblock %}
