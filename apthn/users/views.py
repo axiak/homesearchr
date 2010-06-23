@@ -16,7 +16,7 @@ def login(request):
         #this can be eliminated by making a LoginForm
         return HttpResponseRedirect("/")
     hunter = AptHunter.login(r["username"],r["password"])
-    response = HttpResponseRedirect("/filters/create/%s/"%hunter.last_city)
+    response = HttpResponseRedirect("/filters/create/%s/" % hunter.last_city)
     response.set_cookie("sessioncookie", hunter.sessioncookie)
     response.set_cookie("username", hunter.username)
     return response
