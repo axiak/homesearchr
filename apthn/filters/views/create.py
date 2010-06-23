@@ -89,10 +89,26 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
 
     if not request.user:
         cform = ContactForm()
+        form = FilterForm()
     else:
         cform = None
+        filterq = AptFilter.all().filter("apth =", request.user)
+        if filterq.count(1) == 0:
+            form = FilterForm()
+        else:
+            filterq.order("created")
+            f = filterq.fetch(1)[0]
+            fd = {}
+            fd["cats"]        = f.cats
+            fd["concierge"]   = f.concierge
+            fd["washerdryer"] = f.washerdryer
+            fd["heat"]        = f.heat
+            fd["hotwater"]    = f.hotwater
+            fd["brokerfee"]   = f.brokerfee
+            fd["size"]        = f.size_names
+            form = FilterForm(fd)
 
-    context = {'form': FilterForm(),
+    context = {'form': form,
                'cform': cform,
                'centerlat': center[0],
                'centerlng': center[1],
