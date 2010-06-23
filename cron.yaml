@@ -11,9 +11,9 @@ cron:
   url: /apts/get/newyork
   schedule: every 1 minutes
 
-#- description: Send emails
-#  url: /filters/email/all/
-#  schedule: every 1 hours
+- description: Send emails
+  url: /filters/email/all/
+  schedule: every 1 hours
 
 - description: Update breakdown
   url: /apts/breakdown/
