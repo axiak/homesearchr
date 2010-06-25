@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>Admin: View Filters</title>
+  <style type="text/css">
+    table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    }
+    th, td {
+    padding: 5px;
+    }
+    table {
+    width: 800px;
+    }
+  </style>
+</head>
+<body>
+<h2>View filters</h2>
+<table colspacing="0" colpadding="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Created</th>
+  </thead>
+  <tbody>
+    {% for filter in filters %}
+    <tr>
+      <td><a href="/filters/admin/{{ filter.key.id_or_name }}/">{{ filter.key.id_or_name }}</a></td>
+      <td>{{ filter.get_email }}</td>
+      <td>{{ filter.entity.created.date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</body>
+</html>

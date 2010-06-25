@@ -31,5 +31,9 @@ handlers:
   script: main.py
   login: admin
 
+- url: /filters/admin.*
+  script: main.py
+  login: admin
+
 - url: /.*
   script: main.py

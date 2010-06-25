@@ -9,6 +9,6 @@ class AptHunter(db.Model):
     first_created = db.DateTimeProperty()
 
     def __str__(self):
-        return '<User %s>' % contactinfo
+        return '<User %s>' % self.contactinfo
 
     __repr__ = __str__

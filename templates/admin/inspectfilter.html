@@ -1,0 +1,69 @@
+<html>
+<head>
+  <title>Admin: View Filter by {{ filter.get_email }}</title>
+  <style type="text/css">
+    table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    }
+    th, td {
+    padding: 5px;
+    }
+    table {
+    width: 800px;
+    }
+  </style>
+</head>
+<body>
+<a href="/filters/admin/">&lt;- Back</a>
+<h2>Entity info for {{ filter.get_email }}</h2>
+<table colspacing="0" colpadding="0">
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Value</th>
+  </thead>
+  <tbody>
+    {% for key, value in filter.entity.items %}
+    <tr>
+      <td>{{ key }}</td>
+      <td>{{ value }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br ><br >
+<h2>Query for apartment search</h2>
+{{ results.2 }}
+<br ><br >
+<h2>Results</h2>
+<p><strong>Total Scanned: {{ results.1 }}</strong></p>
+{% if not results.0 %}
+<p>No results found.</p>
+{% else %}
+<table>
+  <thead>
+    <tr>
+      <th>Score</th>
+      <th>Apt</th>
+      {% for key in results.0.0.1 %}
+      <th>{{ key }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for result in results.0 %}
+    <tr>
+      <td>{{ result.0 }}</td>
+      <td><a href="{{ result.2.url }}">{{ result.2.id }}</a></td>
+      {% for value in result.1.values %}
+      <td>{{ value }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+<br><br><br>
+</body>
+</html>

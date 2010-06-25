@@ -42,7 +42,7 @@ def ajax_get_count(request):
         **boolean_data
         )
     logging.info("Filter: %r" % f.__dict__)
-    results, scanned = email.get_matched_apartments(f, look_back)
+    results, scanned = email.get_matched_apartments(f, look_back)[:2]
     count = len(results)
     return HttpResponse(simplejson.dumps({'count': count, 'scanned': scanned}),
                         mimetype="application/json")

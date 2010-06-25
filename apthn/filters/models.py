@@ -37,6 +37,14 @@ class AptFilter(BaseModel):
     size_weights = db.ListProperty(float)
 
     @property
+    def entity(self):
+        return self._entity
+
+    @property
+    def get_id(self):
+        return self.id()
+
+    @property
     def nice_polygons(self):
         if hasattr(self, '_nice_polygons'):
             return self._nice_polygons

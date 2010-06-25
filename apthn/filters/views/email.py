@@ -83,7 +83,7 @@ def send_one_email(request):
 
 
 def perform_notify(aptf, admin_send=False):
-    results, total_scanned = get_matched_apartments(aptf)
+    results, total_scanned = get_matched_apartments(aptf)[:2]
     results.sort(reverse=True)
     aptf.disable_string = ''.join(random.choice(string.letters)
                                   for x in xrange(32))
@@ -178,7 +178,7 @@ def get_matched_apartments(aptf, updated_since=YESTERDAY):
         #if len(curresults) < 1000 or total_scanned > 3000:
         break
         #rpc = db.create_rpc(deadline=18, read_policy=db.EVENTUAL_CONSISTENCY)
-    return (results, total_scanned)
+    return (results, total_scanned, debug_print_info(filter_strings))
 
 def send_email(aptf, results, admin_send=False):
     from django.template.loader import render_to_string
