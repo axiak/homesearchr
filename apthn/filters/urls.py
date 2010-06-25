@@ -9,4 +9,6 @@ urlpatterns = patterns('',
         (r'^email/all/?$', 'apthn.filters.views.email.send_emails'),
         (r'^email/one/?$', 'apthn.filters.views.email.send_one_email'),
 
+        (r'^admin/(.+?)/?$', 'apthn.filters.views.admin.filter_info'),
+        (r'^admin/?$', 'apthn.filters.views.admin.filter_view'),
 )

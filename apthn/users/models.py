@@ -15,7 +15,7 @@ class AptHunter(db.Model):
     sessioncookie = db.StringProperty() #random number
 
     def __str__(self):
-        return '<User %s>' % contactinfo
+        return '<User %s>' % self.contactinfo
 
     __repr__ = __str__
 
