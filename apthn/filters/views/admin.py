@@ -33,7 +33,7 @@ def filter_view(request):
         
         for aptf in results:
             email = aptf.get_email()
-            if aptf.good_to_email() and email not in seen_emails:
+            if email not in seen_emails:
                 filters.append(aptf)
         if len(results) < N:
             break
