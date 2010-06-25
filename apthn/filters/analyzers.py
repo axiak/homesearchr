@@ -230,7 +230,10 @@ class Size(Analyzer):
             debug_info.append(("size IN", val))
 
     def create_weight(self, aptf, apartment):
-        return 1
+        if not aptf.size_names:
+            return 1
+        val = [x.lower() for x in aptf.size_names]
+        return int(apartment.size.lower() in val)
 
     def filter_size_estimate(self, apt_breakdown, aptf):
         if 'size' not in apt_breakdown:
