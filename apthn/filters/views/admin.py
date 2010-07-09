@@ -49,6 +49,8 @@ def filter_info(request, id_value):
         aptf = AptFilter.get_by_key(id_value)
     if aptf:
         results = email.get_matched_apartments(aptf)
+        results[0].sort(key=lambda x: x[0], reverse=True)
+
     else:
         results = None
 

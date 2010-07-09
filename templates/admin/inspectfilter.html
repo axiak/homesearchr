@@ -55,7 +55,7 @@
     {% for result in results.0 %}
     <tr>
       <td>{{ result.0 }}</td>
-      <td><a href="{{ result.2.url }}">{{ result.2.id }}</a></td>
+      <td><a href="{{ result.2.url }}">{{ result.2.id }}</a> ${{ result.2.price }}</td>
       {% for value in result.1.values %}
       <td>{{ value }}</td>
       {% endfor %}
