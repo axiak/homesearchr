@@ -2,7 +2,9 @@ from django import forms
 from models import AptHunter
 
 class UserForm(forms.Form):
-    email = forms.EmailField(help_text="Where would you like to be notified", required=False)
+    required_css_class = "required"
+
+    email = forms.EmailField(help_text="Where would you like to be notified", required=True)
     username = forms.CharField(help_text="(optional) Give a username to log in with", required=False)
     password = forms.CharField(widget=forms.PasswordInput, help_text="(optional) password", required=False)
     password2 = forms.CharField(widget=forms.PasswordInput, help_text="password again", required=False, label="Confirm Password")

@@ -103,6 +103,9 @@ $(document).ready(function (e) {
                 else {
                     elem.className = "required";
                 }
+                if (elem.name == "email") {
+                    elem.className += " email";
+                }
             });
 
         $("#price-range").slider({
@@ -120,5 +123,8 @@ $(document).ready(function (e) {
 
         $("#id_expires").datepicker({minDate: '+7D', maxDate: '+6M'});
 
-        $("#mainform").validate();
+        $("#mainform").validate({
+                id_password2: {
+                    equalTo: "#id_password"
+                        }});
     });

@@ -87,11 +87,8 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
         response.set_cookie("username", user.username)
         return response
 
-    if not request.user:
-        cform = ContactForm()
-        form = FilterForm()
-    else:
-        cform = None
+    if request.user:
+        contactform = None
         filterq = AptFilter.all().filter("apth =", request.user)
         if filterq.count(1) == 0:
             form = FilterForm()
@@ -109,7 +106,7 @@ def create_filter(request, city="boston", template="createfilter.html", initial=
             form = FilterForm(fd)
 
     context = {'form': form,
-               'cform': cform,
+               'cform': contactform,
                'centerlat': center[0],
                'centerlng': center[1],
                'mapzoom': center[2],}

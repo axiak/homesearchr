@@ -58,7 +58,7 @@ class AptHunter(db.Model):
         email       = contactform.cleaned_data["email"]
         hunters = db.GqlQuery("SELECT * FROM AptHunter WHERE email = :1", email)
         if hunters.count(1) > 0:
-            user = hunters[1]
+            user = hunters[0]
             user.username = username
         else:
             user = thisclass(username =    username,
