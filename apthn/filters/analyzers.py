@@ -230,6 +230,8 @@ class Size(Analyzer):
             debug_info.append(("size IN", val))
 
     def create_weight(self, aptf, apartment):
+        if not apartment.size:
+            return 0
         if not aptf.size_names:
             return 1
         val = [x.lower() for x in aptf.size_names]
