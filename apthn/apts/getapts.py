@@ -29,10 +29,14 @@ def getapts(request, city):
     LIMIT = int(request.GET.get("LIMIT", 20))
     HLIMIT = int(request.GET.get("HLIMIT", LIMIT)) * 3
     results = []
-    if city.lower() not in settings.CITIES:
-        return HttpResponse("City %s not found." % city)
 
-    city = (city.lower(), settings.CITIES[city.lower()])
+    if '-' in city:
+        city = city.lower().split('-', 1)
+    else:
+        if city.lower() not in settings.CITIES:
+            return HttpResponse("City %s not found." % city)
+
+        city = (city.lower(), settings.CITIES[city.lower()])
 
     HLIMIT = max(HLIMIT, LIMIT)
 
@@ -64,7 +68,7 @@ def getapts(request, city):
         if aptfound:
             continue
         
-        debug_info = analyze_url(city, apturl, cgid)
+        debug_info = analyze_url(city[0], apturl, cgid)
         results.append("Finished with %s" % cgid)
         if settings.DEBUG:
             results.append(str(debug_info))
@@ -132,6 +136,9 @@ def analyze_url(city, apturl, cgid):
 
     kwargs = {
         'updated': update_time,
+        'id': cgid,
+        'url': apturl,
+        'region': city.upper(),
         }
     for analysis in analyzers.values():
         try:
@@ -142,9 +149,6 @@ def analyze_url(city, apturl, cgid):
             traceback.print_exc()
 
     a = Apartment(key_name = str(cgid),
-                  url = apturl,
-                  id = cgid,
-                  region = city.upper(),
                   **kwargs)
     a.put()
     if kwargs.get('location') or kwargs.get('location_accuracy') != 'TRY_AGAIN':
