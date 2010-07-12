@@ -4,6 +4,8 @@ import time
 import urllib
 import datetime
 import traceback
+import sys
+import os
 
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
@@ -15,6 +17,7 @@ from django.http import HttpResponse
 from apthn.utils import geohash
 
 from apthn.apts.models import *
+from apthn.apts.zoneinfo import *
 from apthn.filters.analyzers import analyzers, FailTryAgain
 
 cg_id_re = re.compile(r'(\d+)\.html')
@@ -101,15 +104,35 @@ def apartment_is_found(cgid):
     memcache.set(ckey, result, TIME)
     return result
 
+def getapt(request, city, cgid):
+    """
+    Get information for a specific craigslist id.
+    """
+    cgid_parts = cgid.rsplit('/', 1)
+    if len(cgid_parts) > 1:
+        index, cgid = cgid_parts
+    else:
+        index = ''
+    cgid = long(cgid)
+    apturl = 'http://%s.craigslist.org/%s/%s.html' % (city.lower(), index, cgid)
+    debug_info = analyze_url(city, apturl, cgid)
+    results.append("Finished with %s" % cgid)
+    if settings.DEBUG:
+        results.append(str(debug_info))
+    return HttpResponse('\n'.join(results), mimetype='text/plain')
+
 
 def analyze_url(city, apturl, cgid):
     result = urlfetch.fetch(apturl)
     if result.status_code != 200:
         return
     html = result.content
+    update_time = get_update_time(html)
     cltags = parse_cltags(html)
 
-    kwargs = {}
+    kwargs = {
+        'updated': update_time,
+        }
     for analysis in analyzers.values():
         try:
             kwargs.update(analysis.analyze_content(cltags, html, apturl))
@@ -121,14 +144,28 @@ def analyze_url(city, apturl, cgid):
     a = Apartment(key_name = str(cgid),
                   url = apturl,
                   id = cgid,
-                  region = city[0].upper(),
-                  updated = datetime.datetime.now(),
+                  region = city.upper(),
                   **kwargs)
     a.put()
     if kwargs.get('location') or kwargs.get('location_accuracy') != 'TRY_AGAIN':
         memcache.set("apt_f_%s" % cgid, True, 3600 * 5)
     return str(kwargs)
 
+_update_time_re = re.compile(r"Date:\s+(\d{4})\D(\d{1,2})\D(\d{1,2})\D{1,3}(\d{1,2}):(\d{1,2})(PM|AM)\D{1,2}(\w{3,6})", re.I)
+def get_update_time(html):
+    m = _update_time_re.search(html)
+    if not m:
+        # We don't have a date time to show, use now.
+        return datetime.datetime.now()
+    groups = m.groups()
+    nums = map(int, list(groups[:-2]))
+    ampm = groups[-2]
+    tz = groups[-1]
+    if ampm.upper() == 'PM':
+        nums[3] += 12
+    tzoffset = ZONES.get(tz, ZONES['UTC'])
+    d = datetime.datetime(*nums) + tzoffset
+    return d
 
 def parse_cltags(html):
     cltags = {}
