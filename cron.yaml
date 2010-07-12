@@ -4,7 +4,7 @@ cron:
   schedule: every 1 minutes
 
 - description: Update of Boston (abo for emphasis)
-  url: /apts/get/boston-abo/
+  url: /apts/get/boston-gbs-abo/
   schedule: every 5 minutes
 
 - description: Update of San Francisco

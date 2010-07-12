@@ -32,6 +32,7 @@ def getapts(request, city):
 
     if '-' in city:
         city = city.lower().split('-', 1)
+        city[1] = city[1].replace('-', '/')
     else:
         if city.lower() not in settings.CITIES:
             return HttpResponse("City %s not found." % city)
