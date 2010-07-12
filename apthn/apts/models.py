@@ -102,7 +102,7 @@ class Apartment(BaseModel):
 
     @classmethod
     def delete_some(cls, num=10, N=30):
-        read_back = 2
+        read_back = 3
         rpc = db.create_rpc(deadline=30, read_policy=db.EVENTUAL_CONSISTENCY)
         q = db.GqlQuery("SELECT __key__ FROM Apartment WHERE updated < :1",
                         datetime.datetime.now() - datetime.timedelta(days=read_back),

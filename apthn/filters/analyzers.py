@@ -21,11 +21,11 @@ _remove_tags = re.compile(r'<[^>]+>')
 # Heat and hot water...
 _hwre = re.compile(r'\W(?:heat|ht)\s*(?:and|&|&amp;)\s*(?:hw|hot\s+water)\s+incl', re.I)
 _hwre2 = re.compile(r'utilities:?\W+(?:heat|ht)\W{1,4}(and)?\W{0,4}(?:hw|hot\s+water)', re.I)
-_hw1 = re.compile(r'\Winclude:?\W{1,10}(?:hw|hot\s+water)\W', re.I)
-_hw2 = re.compile(r'\W(?:hw|hot\s+water)\W{1,10}includ', re.I)
-_ht1 = re.compile(r'\Winclude:?\W{1,10}(?:ht|heat)\W', re.I)
+_hw1 = re.compile(r'\Wincludes?:?\W{1,10}(?:heat|ht/?)?(?:hw|hot\s+water)\W', re.I)
+_hw2 = re.compile(r'\W(?:hw|hot\s+water)\W{1,10}included', re.I)
+_ht1 = re.compile(r'\Wincludes?:?\W{1,10}(?:ht|heat)\W', re.I)
 _ht2 = re.compile(r'\W(?:ht|heat)\W{1,10}includ', re.I)
-_ld1 = re.compile(r'\Wlaundry\W{1,10}(?:room|unit)', re.I)
+_ld1 = re.compile(r'\Wlaundry\W{1,10}(?:facility|closet|room)?\W{0,3}(?:room|unit|on-?site)', re.I)
 _ld2 = re.compile(r'\Wwasher\s?(?:/|and)\s?dryer\W{1,10}(?:room|unit)', re.I)
 
 class FailTryAgain(Exception):
