@@ -7,7 +7,7 @@ from functools import wraps
 
 CACHE_API_VERSION = '1'
 CACHE_ADD_RO_TIME = 45 # 45 seconds 'till we run again
-CACHE_ENABLE = True
+CACHE_ENABLE = False
 
 def cacheview(keyfunc, cachetimeout=86400):
     if cachetimeout < 300:
